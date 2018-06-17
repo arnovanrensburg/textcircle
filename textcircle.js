@@ -51,7 +51,11 @@ if (Meteor.isClient) {
   Template.navbar.events({
     "click .js-add-doc":function(event){
       event.preventDefault();
-      console.log("add new doc");
+      if (Meteor.user()) {
+        Meteor.call("addDoc");
+      } else {
+        alert("You need to log in first!");
+      }
 
     }
   })
@@ -68,6 +72,15 @@ if (Meteor.isServer) {
 }
 // methods that provide write access to the data
 Meteor.methods({
+  addDoc:function(){
+    if (this.userId) {
+      var doc = {owner:this.userId, createdOn:new Date(), title:"my new doc"};
+      Documents.insert(doc);
+    } else {
+      return;
+    }
+
+  },
   // allows changes to the editing users collection 
   addEditingUser:function(){
     var doc, user, eusers;
