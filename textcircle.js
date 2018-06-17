@@ -47,7 +47,11 @@ if (Meteor.isClient) {
     "click .js-add-doc":function(event){
       event.preventDefault();
       if (Meteor.user()) {
-        Meteor.call("addDoc");
+        Meteor.call("addDoc",function(err,id) {
+          if (!err) {
+            Session.set("docid",id);
+          }
+        });
       } else {
         alert("You need to log in first!");
       }
@@ -70,7 +74,7 @@ Meteor.methods({
   addDoc:function(){
     if (this.userId) {
       var doc = {owner:this.userId, createdOn:new Date(), title:"my new doc"};
-      Documents.insert(doc);
+      return Documents.insert(doc);
     } else {
       return;
     }
