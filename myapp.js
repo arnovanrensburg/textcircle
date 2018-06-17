@@ -20,8 +20,7 @@ if (Meteor.isClient) {
       return function(editor){
         editor.setOption("lineNumbers", true);
         editor.setOption("theme", "cobalt");
-        // set a callback that gets triggered whenever the user
-        // makes a change in the code editing window
+        // set a callback that gets triggered whenever the user makes a change in the code editing window
         editor.on("change", function(cm_editor, info){
           // send the current code over to the iframe for rendering
           $("#viewer_iframe").contents().find("html").html(cm_editor.getValue());
@@ -36,9 +35,9 @@ if (Meteor.isClient) {
     users:function(){
       var doc, eusers, users;
       doc = Documents.findOne();
-      if (!doc){return;}// give up
+      if (!doc){return;}
       eusers = EditingUsers.findOne({docid:doc._id});
-      if (!eusers){return;}// give up
+      if (!eusers){return;}
       users = new Array();
       var i = 0;
       for (var user_id in eusers.users){
@@ -48,8 +47,16 @@ if (Meteor.isClient) {
       return users;
     }
   })
+
+  Template.navbar.events({
+    "click .js-add-doc":function(event){
+      event.preventDefault();
+      console.log("add new doc");
+
+    }
+  })
  
-}// end isClient...
+}
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
